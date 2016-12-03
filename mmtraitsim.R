@@ -35,7 +35,6 @@ makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va=G,Ve=R,sd='tb
     if(sd=='rnd'){
       s <- sort(sample(x=sires$ID,size=nsires,replace=F))
       d <- sort(sample(x=dams$ID,size=ndams,replace=F))
-      #d <- sample(x=rep(dams$ID,ls),size=ndams*ls,replace=F)
     } else if(sd=='tbv/h'){
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       s <- s[1:nsires]
