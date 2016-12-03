@@ -2,7 +2,7 @@
 ###### To get base population
 #######################################################################
 library(MASS)
-makebasepop <- function(nsires=100,ndams=100,mu=c(0.0025,100,1000),Va,Ve){
+makebasepop <- function(nsires=50,ndams=1000,mu=c(0.0025,100,1000),Va,Ve){
   ID <- 1:sum(nsires,ndams)
   nanims <- sum(nsires,ndams)
   TBV <- data.frame(round(mvrnorm(nanims,mu,Va),6))
@@ -25,7 +25,7 @@ makebasepop <- function(nsires=100,ndams=100,mu=c(0.0025,100,1000),Va,Ve){
   return(basedata) 
 }
 
-makeoff <- function(Numgen,basedata,nsires=50,ndams=1000,ls=5,Va,Ve,sd='tbv/h',md='rnd_ug',trsel=2) {
+makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va=G,Ve=R,sd='tbv/h',md='rnd_ug',trsel=1) {
   for (m in 1:Numgen){
     if(m>1){basedata <- offspring}
     sires <- basedata[which(basedata$Sex=='M'),]
@@ -37,14 +37,14 @@ makeoff <- function(Numgen,basedata,nsires=50,ndams=1000,ls=5,Va,Ve,sd='tbv/h',m
       d <- sort(sample(x=dams$ID,size=ndams,replace=F))
       #d <- sample(x=rep(dams$ID,ls),size=ndams*ls,replace=F)
     } else if(sd=='tbv/h'){
-      s <- sires[order(sires[,trsel],decreasing=T),'ID']
+      s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       s <- s[1:nsires]
-      d <- dams[order(dams[,trsel],decreasing=T),'ID']
+      d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       d <- d[1:ndams]
     } else if(sd=='tbv/l'){
-      s <- sires[order(sires[,trsel],decreasing=F),'ID']
+      s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       s <- s[1:nsires]
-      d <- dams[order(dams[,trsel],decreasing=F),'ID']
+      d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       d <- d[1:ndams]
     }
     ################## mating design  ############
@@ -74,10 +74,17 @@ makeoff <- function(Numgen,basedata,nsires=50,ndams=1000,ls=5,Va,Ve,sd='tbv/h',m
     for(j in 1:ncol(Ve)){E[,j] <- 0 + (E[,j]*sde[j])}
     colnames(E) <- paste('Res',1:nrow(Ve),sep='')
     
-    ########### computing BV (Parents average) + MS 
-    ebvsire <- merge(basedata,data.frame(ID=use.sires),by='ID',sort=F)[,paste('TBV',1:nrow(Va),sep='')]
-    ebvdam <- merge(basedata,data.frame(ID=use.dams),by='ID',sort=F)[,paste('TBV',1:nrow(Va),sep='')]
-    ebvoff <- 0.5*ebvsire + 0.5*ebvdam + MS
+    ########### computing BV (Parents average) + MS
+    SIRES <- data.frame(ID=unique(parent$Sire))
+    DAMS <- data.frame(ID=unique(parent$Dam))
+    
+    ebvsire <- merge(offspring[,c('ID','Sire')],basedata[,-c(1,3,4,5)],by.x='Sire',by.y='ID')[,c('ID',paste('TBV',1:nrow(Va),sep=''))]
+    ebvdam <- merge(offspring[,c('ID','Dam')],basedata[,-c(1,3,4,5)],by.x='Dam',by.y='ID')[,c('ID',paste('TBV',1:nrow(Va),sep=''))]
+    
+    ebvparents <- merge(ebvsire,ebvdam,by='ID')[,-1]
+    sirecol=c(1:ncol(Ve))
+    damcol=c(sirecol+ncol(Ve))
+    ebvoff <- 0.5*ebvparents[,sirecol] + 0.5*ebvparents[,damcol] + MS
     colnames(ebvoff) <- paste('TBV',1:nrow(Va),sep='')
     
     ############## making phenotypes  ##################
@@ -85,23 +92,13 @@ makeoff <- function(Numgen,basedata,nsires=50,ndams=1000,ls=5,Va,Ve,sd='tbv/h',m
     colnames(pheno) <- paste('Phen',1:nrow(Va),sep='')
     
     ################ assign sex #########################
-    if(ls==1){
-      Sex=sample(c('M','F'),size=ndams,replace=T)
-    } else {
-      fams <- unique(offspring$Dam)
-      fams <- fams[fams!=0]
-      for(l in fams){
-        offfams <- data.frame(ID=offspring[which(offspring$Dam==l),'ID'])
-        offfams$Sex <- sort(rep(c('M','F'),length.out=nrow(offfams)),decreasing=T)
-        if(l==fams[1]){offSex <- offfams} else {offSex <- rbind.data.frame(offSex,offfams)}
-      }
-    }
+    Sex <- sample(rep(c('M','F'),noff/2),size=noff,replace=F)
+
     ######## final datafile containg all columns ############
-    offspring <- merge(offspring,offSex,by='ID')
+    offspring <- cbind.data.frame(offspring,Sex)
     offspring <- cbind.data.frame(G=m,offspring,ebvoff,E,pheno)
     if(m==1){offspringgen <- offspring} else {offspringgen <- rbind.data.frame(offspringgen,offspring)}
     cat('... generation ...',m,' ... completed ...\n')
   }
   return(offspringgen)
 } 
-
