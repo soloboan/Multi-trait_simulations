@@ -9,13 +9,15 @@ Simple R-codes (2 scripts) for multi-trait simulations
     -function : 'makeoff'
 
 ## Options
-- User defined number of traits 
-- User defined number of generations
-- selection of parents based on 
-    A) random - no selection (rnd)
-    B) high TBV (tbv/h)
-    C) low TBV (tbv/l)
-- mating design for selected animals
-    A) random mating with random union of gamete (rnd_ug)
-    B) nested mating designs, i.e. specific mating ratio (e.g. 1:2 ; 1:25)
+- User defined number of traits  
+- User defined number of generations  
+- selection of parents based on (sd=)   
+    A) random - no selection (rnd)  
+    B) high TBV (tbv/h)  
+    C) low TBV (tbv/l)  
+- mating design for selected animals (md=)  
+    A) random mating with random union of gamete (rnd_ug)  
+    B) nested mating designs, i.e. specific mating ratio (e.g. 1:2 ; 1:25)  
+- litter size per dam (ls=)  
+- which of the traits you want to select when selection is not random (trsel=)  
 
