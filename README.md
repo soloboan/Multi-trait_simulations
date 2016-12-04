@@ -1,5 +1,9 @@
 # Multi-trait_simulations
 
+### other packages the script depends on (please install them)  
+    - MASS  
+    - pedigree  
+
 Simple R-codes (2 scripts) for multi-trait simulations
 
 ### simulating a base population
@@ -25,6 +29,14 @@ Simple R-codes (2 scripts) for multi-trait simulations
 - Sex ratio is fixed at 50% male and 50% female  
 - G-struture and R-struture covariance structure are need in matrix format  
 
+### Output columns 
+    - Generation
+    - Pedigree structure (ID, Sire, Dam)
+    - Sex
+    - Inbreeding (Fped)
+    - True breeding values (number of columns equals number of traits)
+    - Residuals (number of columns equals number of traits)
+    - Phenotypes ((number of columns equals number of traits))
 
 
 
