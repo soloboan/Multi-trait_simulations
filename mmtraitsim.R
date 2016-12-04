@@ -8,15 +8,11 @@ makebasepop <- function(nsires=50,ndams=1000,mu=c(0.0025,100,1000),Va,Ve){
   TBV <- data.frame(round(mvrnorm(nanims,mu,Va),6))
   TBV <- scale(TBV)
   sdtbv <- sqrt(diag(Va))
-  for(s in 1:ncol(Va)){
-    TBV[,s] <- mu[s] + (TBV[,s]*sdtbv[s])
-  }
+  for(s in 1:ncol(Va)){TBV[,s] <- mu[s] + (TBV[,s]*sdtbv[s])}
   E <- data.frame(round(mvrnorm(nanims,rep(0,length(mu)),Ve),6))
   E <- scale(E)
   sde <- sqrt(diag(Ve))
-  for(s in 1:ncol(Ve)){
-    E[,s] <- 0 + (E[,s]*sde[s])
-  }
+  for(s in 1:ncol(Ve)){E[,s] <- 0 + (E[,s]*sde[s])}
   pheno <- TBV + E
   datafile <- data.frame(TBV,E,pheno)
   colnames(datafile) <- c(paste('TBV',1:nrow(Va),sep=''),paste('Res',1:nrow(Va),sep=''),paste('Phen',1:nrow(Va),sep=''))
@@ -29,13 +25,14 @@ makebasepop <- function(nsires=50,ndams=1000,mu=c(0.0025,100,1000),Va,Ve){
 ###### Making offspring population from the base population
 #######################################################################
 
-makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va=G,Ve=R,sd='tbv/h',md='rnd_ug',trsel=1) {
+makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va,Ve,sd='tbv/h',md='rnd_ug',trsel=1) {
   for (m in 1:Numgen){
     if(m>1){basedata <- offspring}
     sires <- basedata[which(basedata$Sex=='M'),]
     dams <- basedata[which(basedata$Sex=='F'),]
     noff <- ndams*ls
-    
+
+    ############### selection design for parents ##################    
     if(sd=='rnd'){
       s <- sort(sample(x=sires$ID,size=nsires,replace=F))
       d <- sort(sample(x=dams$ID,size=ndams,replace=F))
@@ -50,6 +47,7 @@ makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va=G,Ve=R,sd='tb
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       d <- d[1:ndams]
     }
+
     ################## mating design  ############
     if(md=='rnd_ug'){
       use.sires <- sort(rep(s,length.out=noff))
@@ -77,10 +75,9 @@ makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va=G,Ve=R,sd='tb
     for(j in 1:ncol(Ve)){E[,j] <- 0 + (E[,j]*sde[j])}
     colnames(E) <- paste('Res',1:nrow(Ve),sep='')
     
-    ########### computing BV (Parents average) + MS   
+    ########### computing BV (Parents average) + MS  ######################  
     ebvsire <- merge(offspring[,c('ID','Sire')],basedata[,-c(1,3,4,5)],by.x='Sire',by.y='ID')[,c('ID',paste('TBV',1:nrow(Va),sep=''))]
     ebvdam <- merge(offspring[,c('ID','Dam')],basedata[,-c(1,3,4,5)],by.x='Dam',by.y='ID')[,c('ID',paste('TBV',1:nrow(Va),sep=''))]
-    
     ebvparents <- merge(ebvsire,ebvdam,by='ID')[,-1]
     sirecol=c(1:ncol(Ve))
     damcol=c(sirecol+ncol(Ve))
