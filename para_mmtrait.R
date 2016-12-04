@@ -31,6 +31,7 @@ Va <- matrix(c(va1,covAB,covAC,covAB,va2,covBC,covAC,covBC,va3),nrow=3,ncol=3,by
 Ve <- matrix(c(ve1,covE,covE,covE,ve2,covE,covE,covE,ve3),nrow=3,ncol=3,byrow=TRUE)
 mu <- c(0.0025,100,1000)
 
+
 source('mmtrait_simcode.R')
 basedata <- makebasepop(nsires=200,ndams=1000,mu,Va,Ve)
 cor(basedata[,-1:-5])

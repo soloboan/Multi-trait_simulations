@@ -2,7 +2,7 @@
 ###### Making a base population for subsequent generations
 #######################################################################
 library(MASS)
-makebasepop <- function(nsires=50,ndams=1000,mu=c(0.0025,100,1000),Va,Ve){
+makebasepop <- function(nsires,ndams,mu,Va,Ve){
   ID <- 1:sum(nsires,ndams)
   nanims <- sum(nsires,ndams)
   TBV <- data.frame(round(mvrnorm(nanims,mu,Va),6))
@@ -25,7 +25,7 @@ makebasepop <- function(nsires=50,ndams=1000,mu=c(0.0025,100,1000),Va,Ve){
 ###### Making offspring population from the base population
 #######################################################################
 
-makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va,Ve,sd='tbv/h',md='rnd_ug',trsel=1) {
+makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
   for (m in 1:Numgen){
     if(m>1){basedata <- offspring}
     sires <- basedata[which(basedata$Sex=='M'),]
@@ -45,6 +45,26 @@ makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va,Ve,sd='tbv/h'
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
+      d <- d[1:ndams]
+    } else if(sd=='index/h'){
+      indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
+      Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
+      sires$index <- Sireindex  %*% indexW
+      Damindex <- as.matrix(dams[,paste('TBV',1:nrow(Va),sep='')])
+      dams$index <- Damindex  %*% indexW
+      s <- sires[order(sires[,c('index')],decreasing=F),'ID']
+      s <- s[1:nsires]
+      d <- dams[order(dams[,c('index')],decreasing=F),'ID']
+      d <- d[1:ndams]
+    } else if(sd=='index/l'){
+      indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
+      Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
+      sires$index <- Sireindex  %*% indexW
+      Damindex <- as.matrix(dams[,paste('TBV',1:nrow(Va),sep='')])
+      dams$index <- Damindex  %*% indexW
+      s <- sires[order(sires[,c('index')],decreasing=T),'ID']
+      s <- s[1:nsires]
+      d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
     }
 

@@ -13,17 +13,18 @@ Simple R-codes (2 scripts) for multi-trait simulations
 - User defined number of generations (Numgen=)  
 - selection of parents based on (sd=)   
     A) random - no selection (rnd)  
-    B) high TBV (tbv/h)  
-    C) low TBV (tbv/l)  
+    B) TBV ('tbv/h' or 'tbv/l')  
+    C) selection index ('index/h' or 'index/l')
 - mating design for selected animals (md=)  
     A) random mating with random union of gamete (rnd_ug)  
     B) nested mating designs, i.e. specific mating ratio (e.g. 1:2 ; 1:25)  
 - litter size per dam (ls=)  
 - which of the traits you want to select when selection is not random (trsel=)  
 
+### Additional fixed arguments  
+- Sex ratio is fixed at 50% male and 50% female  
+- G-struture and R-struture covariance structure are need in matrix format  
 
-### Additional fixed arguments
--Sex ratio is fixed at 50% male and 50% female
--
+
 
 
