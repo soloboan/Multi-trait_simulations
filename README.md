@@ -28,3 +28,10 @@ Simple R-codes (2 scripts) for multi-trait simulations
 
 
 
+
+##### This code was written in close discussions with  
+	- Panya Sae-Lim  
+	- Binyam Dagnachew  
+	- Kristine Hov Martinsen  
+	- Bjarne Gjerde  
+
