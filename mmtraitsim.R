@@ -1,5 +1,5 @@
 #######################################################################
-###### To get base population
+###### Making a base population for subsequent generations
 #######################################################################
 library(MASS)
 makebasepop <- function(nsires=50,ndams=1000,mu=c(0.0025,100,1000),Va,Ve){
@@ -24,6 +24,10 @@ makebasepop <- function(nsires=50,ndams=1000,mu=c(0.0025,100,1000),Va,Ve){
   basedata <- data.frame(G=0,ID,Sire=0,Dam=0,Sex,datafile)
   return(basedata) 
 }
+
+#######################################################################
+###### Making offspring population from the base population
+#######################################################################
 
 makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va=G,Ve=R,sd='tbv/h',md='rnd_ug',trsel=1) {
   for (m in 1:Numgen){
@@ -73,10 +77,7 @@ makeoff <- function(Numgen=2,basedata,nsires=50,ndams=1000,ls=5,Va=G,Ve=R,sd='tb
     for(j in 1:ncol(Ve)){E[,j] <- 0 + (E[,j]*sde[j])}
     colnames(E) <- paste('Res',1:nrow(Ve),sep='')
     
-    ########### computing BV (Parents average) + MS
-    SIRES <- data.frame(ID=unique(parent$Sire))
-    DAMS <- data.frame(ID=unique(parent$Dam))
-    
+    ########### computing BV (Parents average) + MS   
     ebvsire <- merge(offspring[,c('ID','Sire')],basedata[,-c(1,3,4,5)],by.x='Sire',by.y='ID')[,c('ID',paste('TBV',1:nrow(Va),sep=''))]
     ebvdam <- merge(offspring[,c('ID','Dam')],basedata[,-c(1,3,4,5)],by.x='Dam',by.y='ID')[,c('ID',paste('TBV',1:nrow(Va),sep=''))]
     
