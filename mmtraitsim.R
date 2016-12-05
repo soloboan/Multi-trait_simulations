@@ -121,11 +121,24 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
     
     ################## mating design  ############
     if(tolower(md)=='rnd_ug'){
-      use.sires <- rep(s,length.out=noff)
+      ## sires
+      use.sires <- sort(rep(s,length.out=noff))
+      ### dams
       use.dams <- sample(x=rep(d,length.out=noff),size=noff,replace=F)
     } else if(tolower(md)=='nested'){
-      use.sires <- rep(s,length.out=noff)
+      ## sires
+      ss <- data.frame(s=s,on=1:length(s))
+      use.sires <- data.frame(s=rep(s,length.out=noff))
+      use.sires <- merge(use.sires,ss,by=1)
+      use.sires <- use.sires[order(use.sires$on),1]
+      ## dams
       use.dams <- sample(x=rep(d,length.out=noff),size=noff,replace=F)
+      dd <- data.frame(d=d,on=1:length(d))
+      use.dams <- data.frame(d=sample(x=rep(d,length.out=noff),size=noff,replace=F))
+      use.dams <- merge(use.dams,dd,by=1)
+      use.dams <- use.dams[order(use.dams$on),1]
+      #use.sires <- rep(s,length.out=noff)
+      #use.dams <- sample(x=rep(d,length.out=noff),size=noff,replace=F)
     } 
     #  else if(substr(md,1,3)=='fac'){
     #   partialfacnumber <- as.numeric(gsub(x=unlist(strsplit(md,split='\\['))[2],pattern='\\]',replacement=''))

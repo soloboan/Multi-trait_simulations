@@ -11,9 +11,12 @@ source('mmtraitsim.R')
 basedata <- makebasepop(nsires=150,ndams=300,mu=mu,Va=G,Ve=R)
 cor(basedata[,-1:-6])
 var(basedata[,-1:-6])
-offdata <- makeoff(Numgen=10,basedata,nsires=150,ndams=300,ls=15,
-                    Va=G,Ve=R,sd='tbv/h',md='rnd_ug',trsel=1,selindex=c(0.55,0.45))
+offdata <- makeoff(Numgen=15,basedata,nsires=150,ndams=300,ls=20,
+                    Va=G,Ve=R,sd='tbv/h',md='nested',trsel=1,selindex=c(0.55,0.45))
 dataall <- rbind.data.frame(basedata,offdata)
+
+gen <- dataall[which(dataall$G==1),]
+table(gen$Dam)
 
 ########### checking simulated data for variance reudction, inbreeding, genetic progress
 varGen <- aggregate.data.frame(dataall[,c('TBV1')],list(dataall$G),FUN='var')
