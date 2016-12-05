@@ -39,28 +39,36 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
     
     ############### selection design for parents ##################    
     if(tolower(sd)=='rnd'){
-      s <- sort(sample(x=sires$ID,size=nsires,replace=F))
-      d <- sort(sample(x=dams$ID,size=ndams,replace=F))
+      s <- sample(x=sires$ID,size=nsires,replace=F)
+      d <- sample(x=dams$ID,size=ndams,replace=F)
     } else if(tolower(sd)=='phen/h'){
       s <- sires[order(sires[,paste('Phen',trsel,sep='')],decreasing=T),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('Phen',trsel,sep='')],decreasing=T),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     } else if(tolower(sd)=='phen/l'){
       s <- sires[order(sires[,paste('Phen',trsel,sep='')],decreasing=F),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('Phen',trsel,sep='')],decreasing=F),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     } else if(tolower(sd)=='tbv/h'){
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     } else if(tolower(sd)=='tbv/l'){
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     } else if(tolower(sd)=='index/h'){
       indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
@@ -71,6 +79,8 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       s <- s[1:nsires]
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     } else if(tolower(sd)=='index/l'){
       indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
@@ -81,6 +91,8 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       s <- s[1:nsires]
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     } else if(tolower(sd)=='phenindex/h'){
       indexW <- matrix(selindex/sqrt(diag(Va)+diag(Ve)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('Phen',1:nrow(Va),sep='')])
@@ -91,6 +103,8 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       s <- s[1:nsires]
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     } else if(tolower(sd)=='phenindex/l'){
       indexW <- matrix(selindex/sqrt(diag(Va)+diag(Ve)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('Phen',1:nrow(Va),sep='')])
@@ -101,15 +115,17 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       s <- s[1:nsires]
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
+      s <- sample(x=s,size=nsires,replace=F)
+      d <- sample(x=s,size=ndams,replace=F)
     }
     
     ################## mating design  ############
     if(tolower(md)=='rnd_ug'){
-      use.sires <- sort(rep(s,length.out=noff))
+      use.sires <- rep(s,length.out=noff)
       use.dams <- sample(x=rep(d,length.out=noff),size=noff,replace=F)
     } else if(tolower(md)=='nested'){
-      use.sires <- sort(rep(s,length.out=noff))
-      use.dams <- sort(sample(x=rep(d,length.out=noff),size=noff,replace=F))
+      use.sires <- rep(s,length.out=noff)
+      use.dams <- sample(x=rep(d,length.out=noff),size=noff,replace=F)
     } 
     #  else if(substr(md,1,3)=='fac'){
     #   partialfacnumber <- as.numeric(gsub(x=unlist(strsplit(md,split='\\['))[2],pattern='\\]',replacement=''))
