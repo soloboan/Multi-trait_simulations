@@ -22,7 +22,6 @@ makebasepop <- function(nsires,ndams,mu,Va,Ve){
   
   #### calculate inbreeding using pedigree package
   Fped <- calcInbreeding(data.frame(ID,sire=0,dam=0))
-  
   basedata <- data.frame(G=0,ID,Sire=0,Dam=0,Sex,Fped,datafile)
   return(basedata) 
 }
@@ -39,20 +38,30 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
     noff <- ndams*ls
     
     ############### selection design for parents ##################    
-    if(sd=='rnd'){
+    if(tolower(sd)=='rnd'){
       s <- sort(sample(x=sires$ID,size=nsires,replace=F))
       d <- sort(sample(x=dams$ID,size=ndams,replace=F))
-    } else if(sd=='tbv/h'){
+    } else if(tolower(sd)=='phen/h'){
+      s <- sires[order(sires[,paste('Phen',trsel,sep='')],decreasing=T),'ID']
+      s <- s[1:nsires]
+      d <- dams[order(dams[,paste('Phen',trsel,sep='')],decreasing=T),'ID']
+      d <- d[1:ndams]
+    } else if(tolower(sd)=='phen/l'){
+      s <- sires[order(sires[,paste('Phen',trsel,sep='')],decreasing=F),'ID']
+      s <- s[1:nsires]
+      d <- dams[order(dams[,paste('Phen',trsel,sep='')],decreasing=F),'ID']
+      d <- d[1:ndams]
+    } else if(tolower(sd)=='tbv/h'){
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       d <- d[1:ndams]
-    } else if(sd=='tbv/l'){
+    } else if(tolower(sd)=='tbv/l'){
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       d <- d[1:ndams]
-    } else if(sd=='index/h'){
+    } else if(tolower(sd)=='index/h'){
       indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
       sires$index <- Sireindex  %*% indexW
@@ -62,11 +71,31 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       s <- s[1:nsires]
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
-    } else if(sd=='index/l'){
+    } else if(tolower(sd)=='index/l'){
       indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
       sires$index <- Sireindex  %*% indexW
       Damindex <- as.matrix(dams[,paste('TBV',1:nrow(Va),sep='')])
+      dams$index <- Damindex  %*% indexW
+      s <- sires[order(sires[,c('index')],decreasing=T),'ID']
+      s <- s[1:nsires]
+      d <- dams[order(dams[,c('index')],decreasing=T),'ID']
+      d <- d[1:ndams]
+    } else if(tolower(sd)=='phenindex/h'){
+      indexW <- matrix(selindex/sqrt(diag(Va)+diag(Ve)),nrow=nrow(Va),ncol=1)
+      Sireindex <- as.matrix(sires[,paste('Phen',1:nrow(Va),sep='')])
+      sires$index <- Sireindex  %*% indexW
+      Damindex <- as.matrix(dams[,paste('Phen',1:nrow(Va),sep='')])
+      dams$index <- Damindex  %*% indexW
+      s <- sires[order(sires[,c('index')],decreasing=T),'ID']
+      s <- s[1:nsires]
+      d <- dams[order(dams[,c('index')],decreasing=T),'ID']
+      d <- d[1:ndams]
+    } else if(tolower(sd)=='phenindex/l'){
+      indexW <- matrix(selindex/sqrt(diag(Va)+diag(Ve)),nrow=nrow(Va),ncol=1)
+      Sireindex <- as.matrix(sires[,paste('Phen',1:nrow(Va),sep='')])
+      sires$index <- Sireindex  %*% indexW
+      Damindex <- as.matrix(dams[,paste('Phen',1:nrow(Va),sep='')])
       dams$index <- Damindex  %*% indexW
       s <- sires[order(sires[,c('index')],decreasing=T),'ID']
       s <- s[1:nsires]
@@ -75,10 +104,10 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
     }
     
     ################## mating design  ############
-    if(md=='rnd_ug'){
+    if(tolower(md)=='rnd_ug'){
       use.sires <- sort(rep(s,length.out=noff))
       use.dams <- sample(x=rep(d,length.out=noff),size=noff,replace=F)
-    } else if(md=='nested'){
+    } else if(tolower(md)=='nested'){
       use.sires <- sort(rep(s,length.out=noff))
       use.dams <- sort(sample(x=rep(d,length.out=noff),size=noff,replace=F))
     } 
