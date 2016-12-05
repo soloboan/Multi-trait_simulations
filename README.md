@@ -1,6 +1,6 @@
-# Single and Multi-trait_simulations (Polygenic/Pedigree approach)
+# Single and Multi-trait, multi-generation simulations (Polygenic/Pedigree approach)
 
-### other packages the script depends on (please install them)  
+### Dependencies (please install them)  
     - MASS  
     - pedigree  
 
@@ -12,17 +12,17 @@ Simple R-codes (2 scripts) for multi-trait simulations
 ### simulation the offspring population (desired number of generations)
     -function : 'makeoff'
 
-## Options
+### Options
 - User defined number of traits  
 - User defined number of generations (Numgen=)  
 - selection of parents based on (sd=)   
     A) random - no selection (rnd)  
-    B) Phenotypic selection (Phen/h or Phen/low)
+    B) Phenotypic selection (Phen/h or Phen/l)  
     C) TBV ('tbv/h' or 'tbv/l')  
     D) selection index based on TBV ('index/h' or 'index/l')  
     D) selection index based on phenotypes ('phenindex/h' or 'phenindex/l')  
 - mating design for selected animals (md=)  
-    A) random mating with random union of gamete (rnd_ug) [leads to pseudo-overlapping generations: mostly used in cattle breeding] 
+    A) random mating with random union of gamete (rnd_ug) [leads to pseudo-overlapping generations: mostly used in cattle breeding]  
     B) nested mating designs, i.e. specific mating ratio (e.g. 1:2 ; 1:25) [purely non-overlapping generations: mostly used in fish breeding]  
 - litter size per dam (ls=)  
 - which of the traits you want to select when selection is not random (trsel=)  
@@ -44,6 +44,6 @@ Simple R-codes (2 scripts) for multi-trait simulations
 ##### This code was written in close discussions with  
 	- Panya Sae-Lim  (panya.sae-lim@nofima.no)
 	- Binyam Dagnachew  
-	- Kristine Hov Martinsen  
-	- Bjarne Gjerde  
+	- Kristine Hov Martinsen  (kristine.martinsen@nofima.no)
+	- Bjarne Gjerde  (bjarne.gjerde@Nofima.no)
 
