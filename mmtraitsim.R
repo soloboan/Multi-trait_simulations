@@ -47,28 +47,28 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       d <- dams[order(dams[,paste('Phen',trsel,sep='')],decreasing=T),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     } else if(tolower(sd)=='phen/l'){
       s <- sires[order(sires[,paste('Phen',trsel,sep='')],decreasing=F),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('Phen',trsel,sep='')],decreasing=F),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     } else if(tolower(sd)=='tbv/h'){
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=T),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     } else if(tolower(sd)=='tbv/l'){
       s <- sires[order(sires[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       s <- s[1:nsires]
       d <- dams[order(dams[,paste('TBV',trsel,sep='')],decreasing=F),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     } else if(tolower(sd)=='index/h'){
       indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
@@ -80,7 +80,7 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     } else if(tolower(sd)=='index/l'){
       indexW <- matrix(selindex/sqrt(diag(Va)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('TBV',1:nrow(Va),sep='')])
@@ -92,7 +92,7 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     } else if(tolower(sd)=='phenindex/h'){
       indexW <- matrix(selindex/sqrt(diag(Va)+diag(Ve)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('Phen',1:nrow(Va),sep='')])
@@ -104,7 +104,7 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     } else if(tolower(sd)=='phenindex/l'){
       indexW <- matrix(selindex/sqrt(diag(Va)+diag(Ve)),nrow=nrow(Va),ncol=1)
       Sireindex <- as.matrix(sires[,paste('Phen',1:nrow(Va),sep='')])
@@ -116,7 +116,7 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       d <- dams[order(dams[,c('index')],decreasing=T),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
-      d <- sample(x=s,size=ndams,replace=F)
+      d <- sample(x=d,size=ndams,replace=F)
     }
     
     ################## mating design  ############
