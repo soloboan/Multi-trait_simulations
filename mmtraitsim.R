@@ -5,16 +5,33 @@ require(MASS)
 require(pedigree)
 
 makebasepop <- function(nsires,ndams,mu,Va,Ve){
+  ###################### checking impute parameters ##########
+  if(missing(nsires)){cat("... Specify the number of sires ...\n **script aborted**")
+  return()}
+  if(missing(ndams)){cat("... Specify the number of dams ...\n **script aborted**")
+  return()}
+  if(missing(Va)){cat("... Requires a matrix of Genetic covariance(s) ...\n **script aborted**")
+  return()}
+  if (missing(Ve)){cat("... Requires a matrix of Residual covariance(s) ...\n **script aborted**")
+  return()}
+  if(is.null(nrow(Va))==T | is.null(nrow(Ve))==T){cat("... G|R variance structure should be in matrix format ...\n **script aborted**")
+  return()}
+  if(missing(mu)){mu=rep(0,nrow(Va))
+    cat('... mean of traits un-specified \n mean of 0 is assumed ...\n')}
+  if(is.null(length(mu))==T){mu=rep(0,nrow(Va))
+  cat('... mean of traits un-specified \n mean of 0 is assumed ...\n')}
+  ###################################################################
+  
   ID <- 1:sum(nsires,ndams)
   nanims <- sum(nsires,ndams)
   TBV <- data.frame(round(mvrnorm(nanims,mu,Va),6))
   TBV <- scale(TBV)
   sdtbv <- sqrt(diag(Va))
-  for(s in 1:ncol(Va)){TBV[,s] <- mu[s] + (TBV[,s]*sdtbv[s])}
+  for(s in 1:ncol(Va)){TBV[,s] <- round(mu[s] + (TBV[,s]*sdtbv[s]),6)}
   E <- data.frame(round(mvrnorm(nanims,rep(0,length(mu)),Ve),6))
   E <- scale(E)
   sde <- sqrt(diag(Ve))
-  for(s in 1:ncol(Ve)){E[,s] <- 0 + (E[,s]*sde[s])}
+  for(s in 1:ncol(Ve)){E[,s] <- round(0 + (E[,s]*sde[s]),6)}
   pheno <- TBV + E
   datafile <- data.frame(TBV,E,pheno)
   colnames(datafile) <- c(paste('TBV',1:nrow(Va),sep=''),paste('Res',1:nrow(Va),sep=''),paste('Phen',1:nrow(Va),sep=''))
@@ -31,6 +48,32 @@ makebasepop <- function(nsires,ndams,mu,Va,Ve){
 #######################################################################
 
 makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
+  ###################### checking impute parameters ##########
+  if(missing(basedata)){cat("... data from base population needed ...\n **script aborted**")
+    return()}
+  if(missing(nsires)){cat("... Specify the number of sires ...\n **script aborted**")
+    return()}
+  if(missing(ndams)){cat("... Specify the number of dams ...\n **script aborted**")
+    return()}
+  if(missing(ls)){cat("... Specify the number of offspring per dam/generation ...\n **script aborted**")
+    return()}
+  if(missing(Va)){cat("... Requires a matrix of Genetic covariance(s) ...\n **script aborted**")
+    return()}
+  if (missing(Ve)){cat("... Requires a matrix of Residual covariance(s) ...\n **script aborted**")
+    return()}
+  if (missing(sd)){cat(paste("... Specify selection method \n",
+                             "i) rnd ii) phen/l or phen/h iii) TBV/l or TBV/h",
+                             "iv) index/l or index/h v) phenindex/l or phenindex/h ...\n **script aborted**"))
+    return()}
+  if (missing(md)){cat(paste("... Specify mating design \n",
+                             "i) rnd_ug ii) nested iii) factorial[n] ",
+                             "...\n **script aborted**"))
+    return()}
+  
+  if(is.null(nrow(Va))==T | is.null(nrow(Ve))==T){cat("... G|R variance structure should be in matrix format ...\n **script aborted**")
+    return()}
+  ###################################################################
+  
   for (m in 1:Numgen){
     if(m>1){basedata <- offspring}
     sires <- basedata[which(basedata$Sex=='M'),]
@@ -137,14 +180,12 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       use.dams <- data.frame(d=sample(x=rep(d,length.out=noff),size=noff,replace=F))
       use.dams <- merge(use.dams,dd,by=1)
       use.dams <- use.dams[order(use.dams$on),1]
-      #use.sires <- rep(s,length.out=noff)
-      #use.dams <- sample(x=rep(d,length.out=noff),size=noff,replace=F)
-    } 
-    #  else if(substr(md,1,3)=='fac'){
-    #   partialfacnumber <- as.numeric(gsub(x=unlist(strsplit(md,split='\\['))[2],pattern='\\]',replacement=''))
-    #   use.sires <- rep(rep(sort(s),each=ls),length.out=noff*partialfacnumber)
-    #   use.dams <- sort(rep(d,each=ls*partialfacnumber))
-    # }
+    } else if(substr(md,1,3)=='fac'){
+      partialfacnumber <- as.numeric(gsub(x=unlist(strsplit(md,split='\\['))[2],pattern='\\]',replacement=''))
+      use.sires <- rep(rep(s,each=ls),length.out=noff*partialfacnumber)
+      use.dams <- sort(rep(d,each=ls*partialfacnumber))
+      noff <- ndams*ls*partialfacnumber
+    }
     
     ################# making pedigree  ##################
     parent <- cbind.data.frame(Sire=use.sires,Dam=use.dams)
