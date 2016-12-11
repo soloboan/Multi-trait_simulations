@@ -10,7 +10,7 @@ source('mmtraitsim.R')
 basedata <- makebasepop(nsires=150,ndams=300,mu=mu,Va=G,Ve=R)
 cor(basedata[,-1:-6])
 var(basedata[,-1:-6])
-offdata <- makeoff(Numgen=15,basedata,nsires=150,ndams=150,ls=5,
+offdata <- makeoff(Numgen=15,basedata,nsires=150,ndams=150,ls=5,mu=mu,
                     Va=G,Ve=R,sd='phen/h',md='fact[5]',trsel=1,selindex=c(0.55,0.45))
 dataall <- rbind.data.frame(basedata,offdata)
 
@@ -44,7 +44,7 @@ R <- matrix(c(ve1=17.50,0.00,0.00,ve2=90),nrow=2,ncol=2,byrow=TRUE)
 mu <- c(6,10)
 source('mmtraitsim.R')
 basedata <- makebasepop(nsires=150,ndams=300,mu=mu,Va=G,Ve=R)
-offdata <- makeoff(Numgen=10,basedata,nsires=100,ndams=100,ls=10,
+offdata <- makeoff(Numgen=10,basedata,nsires=100,ndams=100,ls=10,mu=mu,
                    Va=G,Ve=R,sd='phen/h',md='facto[100]',trsel=1,selindex=c(0.85,0.15))
 dataall <- rbind.data.frame(basedata,offdata)
 
