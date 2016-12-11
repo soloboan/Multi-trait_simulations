@@ -47,7 +47,7 @@ makebasepop <- function(nsires,ndams,mu,Va,Ve){
 ###### Making offspring population from the base population
 #######################################################################
 
-makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
+makeoff <- function(Numgen,basedata,nsires,ndams,ls,mu,Va,Ve,sd,md,trsel,selindex){
   ###################### checking impute parameters ##########
   if(missing(basedata)){cat("... data from base population needed ...\n **script aborted**")
     return()}
@@ -57,6 +57,8 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
     return()}
   if(missing(ls)){cat("... Specify the number of offspring per dam/generation ...\n **script aborted**")
     return()}
+  if(missing(mu)){mu=rep(0,nrow(Va))
+    cat('... mean of traits un-specified \n mean of 0 is assumed ...\n')}
   if(missing(Va)){cat("... Requires a matrix of Genetic covariance(s) ...\n **script aborted**")
     return()}
   if (missing(Ve)){cat("... Requires a matrix of Residual covariance(s) ...\n **script aborted**")
@@ -130,9 +132,9 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       sires$index <- Sireindex  %*% indexW
       Damindex <- as.matrix(dams[,paste('TBV',1:nrow(Va),sep='')])
       dams$index <- Damindex  %*% indexW
-      s <- sires[order(sires[,c('index')],decreasing=T),'ID']
+      s <- sires[order(sires[,c('index')],decreasing=F),'ID']
       s <- s[1:nsires]
-      d <- dams[order(dams[,c('index')],decreasing=T),'ID']
+      d <- dams[order(dams[,c('index')],decreasing=F),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
       d <- sample(x=d,size=ndams,replace=F)
@@ -154,9 +156,9 @@ makeoff <- function(Numgen,basedata,nsires,ndams,ls,Va,Ve,sd,md,trsel,selindex){
       sires$index <- Sireindex  %*% indexW
       Damindex <- as.matrix(dams[,paste('Phen',1:nrow(Va),sep='')])
       dams$index <- Damindex  %*% indexW
-      s <- sires[order(sires[,c('index')],decreasing=T),'ID']
+      s <- sires[order(sires[,c('index')],decreasing=F),'ID']
       s <- s[1:nsires]
-      d <- dams[order(dams[,c('index')],decreasing=T),'ID']
+      d <- dams[order(dams[,c('index')],decreasing=F),'ID']
       d <- d[1:ndams]
       s <- sample(x=s,size=nsires,replace=F)
       d <- sample(x=d,size=ndams,replace=F)
