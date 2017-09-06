@@ -1,4 +1,4 @@
-# Single and Multi-trait, multi-generation simulations (Polygenic/Pedigree approach)
+## Single and Multi-trait, multi-generation simulations (Polygenic/Pedigree approach)
 
 ### Dependencies (please install them)  
     - MASS  
@@ -14,21 +14,27 @@ Simple R-codes (2 scripts) for multi-trait simulations
 
 ### Options
 - User defined number of traits  
+
 - User defined number of generations (Numgen=)  
+
 - selection of parents based on (sd=)   
     A) random - no selection (rnd)  
     B) Phenotypic selection (Phen/h or Phen/l)  
     C) TBV ('tbv/h' or 'tbv/l')  
     D) selection index based on TBV ('index/h' or 'index/l')  
     D) selection index based on phenotypes ('phenindex/h' or 'phenindex/l')  
+    
 - index weight (selindex=c())  
     The index weight sums to 1 and it should have the same length as the number of traits 
-    It should be the same order as the traits specified
+    It should be the same order as the traits specified  
+    
 - mating design for selected animals (md=)  
     A) random mating with random union of gamete (rnd_ug) [leads to pseudo-overlapping generations: mostly used in cattle breeding]  
-    B) nested mating designs (nested), i.e. specific mating ratio (e.g. 1:2 ; 1:25) [purely non-overlapping generations: mostly used in fish breeding]  
+    B) nested mating designs (nested), i.e. specific mating ratio (e.g. 1:2 ; 1:25) [purely non-overlapping generations: mostly used in fish breeding] 
     C) factorial design (factorial[n]); please specify in the square braket the number of mating pairs  
+    
 - litter size per dam (ls=)  
+
 - which of the traits you want to select when selection is not random (trsel=)  
 
 ### Additional fixed arguments  
