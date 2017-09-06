@@ -1,4 +1,4 @@
-## Single and Multi-trait, multi-generation simulations (Polygenic/Pedigree approach)
+### Single and Multi-trait, multi-generation simulations (Polygenic/Pedigree approach)
 
 ### Dependencies (please install them)  
     - MASS  
@@ -30,7 +30,7 @@ Simple R-codes (2 scripts) for multi-trait simulations
     
 - mating design for selected animals (md=)  
     A) random mating with random union of gamete (rnd_ug) [leads to pseudo-overlapping generations: mostly used in cattle breeding]  
-    B) nested mating designs (nested), i.e. specific mating ratio (e.g. 1:2 ; 1:25) [purely non-overlapping generations: mostly used in fish breeding] 
+    B) nested mating designs (nested), i.e. specific mating ratio (e.g. 1:2 ; 1:25) [purely non-overlapping generations: mostly used in fish breeding]  
     C) factorial design (factorial[n]); please specify in the square braket the number of mating pairs  
     
 - litter size per dam (ls=)  
